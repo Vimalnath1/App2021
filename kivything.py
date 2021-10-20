@@ -41,12 +41,12 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
     conn = http.client.HTTPSConnection("edamam-food-and-grocery-database.p.rapidapi.com")
     headers = {
         'x-rapidapi-host': "edamam-food-and-grocery-database.p.rapidapi.com",
-        'x-rapidapi-key': "da66f99cf6msh0256ef4567f1ffbp1ea5dejsn972563a3211b"
+        'x-rapidapi-key': "###################################################"
         }
                                                                                     #APIs used 
     recipeheaders = {
         'x-rapidapi-host': "edamam-recipe-search.p.rapidapi.com",
-        'x-rapidapi-key': "da66f99cf6msh0256ef4567f1ffbp1ea5dejsn972563a3211b"
+        'x-rapidapi-key': "##################################################"
         }
 
     '''
