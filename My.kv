@@ -1,0 +1,93 @@
+WindowManager:
+    MainWindow:
+    FoodTrackingWindow:
+    RecipeWindow: 
+    RecipeList:
+
+<MainWindow>:
+    name: "first"
+    GridLayout:
+        rows:3
+        Label:
+            text:"Welcome to App that has not been made and has no name"
+        BoxLayout:
+            orientation:"horizontal"
+            Button:
+                text:"Food Tracker"
+                on_release:
+                    app.root.current="second"
+                    root.manager.transition.direction="right"
+                pos_hint: {"center_x":0.3}
+            Button:
+                text:"Recipes"
+                on_release:
+                    app.root.current="third"
+                    root.manager.transition.direction="left"
+                pos_hint: {"center_x":0.3}
+
+<FoodTrackingWindow>:
+    name: "second"
+    BoxLayout:
+        Label:
+            text:"Food Tracker"
+    ActionBar:
+        size: root.width, 50
+        pos_hint: {'top':1}
+        ActionView:
+            ActionPrevious:
+                with_previous:False
+            ActionButton:
+                text:"Home"
+                on_release:
+                    app.root.current="first"
+                    root.manager.transition.direction="left"
+<RecipeWindow>:
+    name: "third"
+    BoxLayout:
+        orientation:"vertical"
+        Label:
+            text:"Recipes"
+        BoxLayout:
+            orientation:"horizontal"
+            Button:
+                text:"Scan Food"
+                on_release:
+                    app.root.current="fourth"
+                    root.on_button_click()
+                    root.manager.transition.direction="up"
+                    iftrue=False
+                pos_hint: {"right":1}
+                size_hint: 0.5,None
+            Button:
+                text:"Look at list"
+                on_release:
+                    app.root.current="fourth"
+                    root.manager.transition.direction="up" 
+                    iffalse=False
+                pos_hint: {"left":1}
+                size_hint: 0.5,None
+    ActionBar:
+        size: root.width, 50
+        pos_hint: {'top':1}
+        ActionView:
+            ActionPrevious:
+                with_previous:False
+            ActionButton:
+                text:"Home"
+                on_release:
+                    app.root.current="first"
+                    root.manager.transition.direction="right"
+ 
+<RecipeList>:
+    name:"fourth"
+    ActionBar:
+        size: root.width, 10
+        pos_hint: {'top':1}
+        ActionView:
+            ActionPrevious:
+                with_previous:False
+            ActionButton:
+                text:"Home"
+                on_release:
+                    app.root.current="first"
+                    root.manager.transition.direction="down"
