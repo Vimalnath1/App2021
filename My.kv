@@ -55,7 +55,6 @@ WindowManager:
                     app.root.current="fourth"
                     root.on_button_click()
                     root.manager.transition.direction="up"
-                    iftrue=False
                 pos_hint: {"right":1}
                 size_hint: 0.5,None
             Button:
@@ -63,7 +62,6 @@ WindowManager:
                 on_release:
                     app.root.current="fourth"
                     root.manager.transition.direction="up" 
-                    iffalse=False
                 pos_hint: {"left":1}
                 size_hint: 0.5,None
     ActionBar:
@@ -77,11 +75,15 @@ WindowManager:
                 on_release:
                     app.root.current="first"
                     root.manager.transition.direction="right"
- 
+
 <RecipeList>:
     name:"fourth"
+    Button:
+        text:"Show recipes"
+        on_release:
+            root.on_show_recipe_button_click()
     ActionBar:
-        size: root.width, 10
+        size: root.width, 20
         pos_hint: {'top':1}
         ActionView:
             ActionPrevious:
