@@ -1,4 +1,5 @@
 import cv2
+from kivy.uix.label import Label
 from pyzbar.pyzbar import decode
 import numpy as np
 import winsound
@@ -17,13 +18,13 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.actionbar import ActionBar,ActionButton,ActionItem
+from kivy.uix.actionbar import ActionBar,ActionButton,ActionItem, ActionView
 from kivy.lang import Builder
 import time
 from threading import *
-iffalse=True
+
 def recipeappfunction(): #main logic go to line 41 where it actually starts
-    global recipe_labels, iftrue
+    global recipe_labels
     def jsonStripper(thingToStrip,whatToStripInStrip):
         data =json.loads(thingToStrip)
         dataToPrint = []
@@ -34,19 +35,18 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
         return dataToPrint
     url = "https://edamam-recipe-search.p.rapidapi.com/search"
     i=True
-    food={}                                             
+    food={}
     #cam=cv2.VideoCapture("http://192.168.1.4:8080/video")
-    cam=cv2.VideoCapture(0)                                         #makes the camera pop up for the scanning of barcode
-
+    cam=cv2.VideoCapture(0)                                     #makes the camera pop up for the scanning of barcode
     conn = http.client.HTTPSConnection("edamam-food-and-grocery-database.p.rapidapi.com")
     headers = {
         'x-rapidapi-host': "edamam-food-and-grocery-database.p.rapidapi.com",
-        'x-rapidapi-key': "###################################################"
+        'x-rapidapi-key': "da66f99cf6msh0256ef4567f1ffbp1ea5dejsn972563a3211b"
         }
                                                                                     #APIs used 
     recipeheaders = {
         'x-rapidapi-host': "edamam-recipe-search.p.rapidapi.com",
-        'x-rapidapi-key': "##################################################"
+        'x-rapidapi-key': "da66f99cf6msh0256ef4567f1ffbp1ea5dejsn972563a3211b"
         }
 
     '''
@@ -55,8 +55,8 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
         for barcode in decode(frame):
             if i==True:
                 labeldata=barcode.data.decode("utf-8")
-                conn.request("GET", f"/parser?upc={labeldata}", headers=headers)        #Scanning Barcode Logic Commented out because testing and too lazy to scan every time
-                res = conn.getresponse()
+                conn.request("GET", f"/parser?upc={labeldata}", headers=headers)
+                res = conn.getresponse()                                            #Scanning Barcode Logic Commented out because testing and too lazy to scan every time
                 data = res.read()
                 food_info=data.decode()
                 i=False
@@ -65,14 +65,14 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
         if cv2.waitKey(10)==ord("q"):
             break
         cv2.imshow("Camera", frame)'''
-    conn.request("GET", f"/parser?upc=0737628005000", headers=headers)      #sample barcode for testing 
+    conn.request("GET", f"/parser?upc=0737628005000", headers=headers)              #sample barcode for testing
     res = conn.getresponse()
     data = res.read()
     food_info=data.decode()
     where_label=food_info.find("label")
     where_nutrients=food_info.find("nutrients")
-    where_calorie=food_info.find("ENERC_KCAL")              #When barcode scans prints out huge string, the where variables find each nutrient and the food variables
-    where_fat=food_info.find("FAT")                         #break it apart
+    where_calorie=food_info.find("ENERC_KCAL")          #When barcode scans prints out huge string, the where variables find each nutrient and the food variables break it apart
+    where_fat=food_info.find("FAT")
     where_saturatedfat=food_info.find("FASAT")
     where_protein=food_info.find("PROCNT")
     where_sugar=food_info.find("SUGAR")
@@ -94,10 +94,10 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
     food_sodium=food_info[where_sodium:where_calcium]
     food_brand=food_info[where_brand:where_category]
     if "brand" in food_brand:
-        food_brand=food_brand.replace('''brand" :''',"")            
+        food_brand=food_brand.replace('''brand" :''',"")
     if '''"''' in food_brand:
-        food_brand=food_brand.replace('''"''',"")
-        food_brand=food_brand.lstrip()                      #To clean out the food label because it will go into api and it cant have spaces or quotations
+        food_brand=food_brand.replace('''"''',"")                   #To clean out the food label because it will go into api and it cant have spaces or quotations
+        food_brand=food_brand.lstrip()
         food_brand=food_brand.rstrip()
     if food_brand in food_label:
         food_label=food_label.replace(food_brand,"")
@@ -109,7 +109,7 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
     food["Name"]=food_label
     food["Calories"]=food_calories
     food["Fat"]=food_fat
-    food["Protein"]=food_protein        #Adding the each nutrient part to dictionary on line 37
+    food["Protein"]=food_protein                                     #Adding the each nutrient part to dictionary on line 38
     food["Fiber"]=food_fiber
     food["Carbohydrates"]=food_carbs
     food["Sugar"]=food_sugar
@@ -118,21 +118,21 @@ def recipeappfunction(): #main logic go to line 41 where it actually starts
 
 
     pprint.pprint(food)
-    querystring = {"q":f"{food_label}"}
+    querystring = {"q":f"{food_label}"}                         #calling second api to look up the food label in it to find recipes
 
-    response = requests.request("GET", url, headers=recipeheaders, params=querystring)  #calling second api to look up the food label in it to find recipes
+    response = requests.request("GET", url, headers=recipeheaders, params=querystring)
     recipes=response.text
     #pprint.pprint(recipes)
     #find_where_all_substrings_are(recipes,'''"uri":''')
     #print(type(recipes))
     recipe_labels=jsonStripper(recipes,"label")
-    recipe_calories=jsonStripper(recipes,"calories")                                    
-    recipe_health=jsonStripper(recipes,"healthLabels")              #is also returned as a long string so jsonStripper(lines 27-34) breaks it 
+    recipe_calories=jsonStripper(recipes,"calories")
+    recipe_health=jsonStripper(recipes,"healthLabels")              #This API also returns a long string so jsonStripper(lines 28-35) breaks it 
     recipe_cuisine=jsonStripper(recipes,"cuisineType")
     recipe_allergens=jsonStripper(recipes,"cautions")
     recipe_ingredients=jsonStripper(recipes,"ingredientLines")
-    iftrue=True
-class HomeButton(Button,ActionItem):
+    print(recipe_labels)
+class HomeButton(Button,ActionItem):            
     pass                                    #Each class is are the screens of the app
 class MenuBar(ActionBar):
     pass
@@ -143,25 +143,28 @@ class FoodTrackingWindow(Screen):
 class RecipeWindow(Screen):
     def on_button_click(self):
         recipeappfunction()
-if iffalse==False:
-    class RecipeList(Screen):
-        def __init__(self, **kwargs):                           
-            super(RecipeList,self).__init__(**kwargs)
-            layout=BoxLayout(orientation="vertical")        
-            self.add_widget(layout)
-            try:                                                        #Here is my main problem. recipe labels is declared in the function at line 128. Only turns global at 145
-                for i in range(len(recipe_labels)):                     #This for loop creates a button for each label in the list, the thing is if I declare recipe_labels=[]
-                    b=Button(text=recipe_labels[i],size_hint=(1,1))     # it will put zero buttons and keep it like that even if recipe_labels changes after the function
-                    self.add_widget(b)                                  #I want this to basically not exist until line 144
-            except NameError:                                          
-                pass
+
+class RecipeList(Screen):
+    def on_show_recipe_button_click(self, **kwargs):
+        super().__init__(**kwargs)
+        layout=BoxLayout(orientation="vertical")        
+        self.add_widget(layout)
+        actionbar=ActionBar(size=(layout.width,dp(20)),pos_hint={'top':1})
+        actionbutton=ActionButton(text="Home",size_hint=(0.1,0.1),pos_hint={"right":1})
+        layout.add_widget(actionbar)
+        layout.add_widget(actionbutton)
+        for i in range(0,10):
+            b=Button(text=str(recipe_labels[i]),size_hint=(1,.1))
+            layout.add_widget(b)
+        
+        
 class WindowManager(ScreenManager):
     pass
+                                     
+
 
 kv=Builder.load_file("My.kv")
 class MyApp(App):
     def build(self):
         return kv
-
 MyApp().run()
-
