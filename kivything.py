@@ -146,16 +146,20 @@ class RecipeWindow(Screen):
 
 class RecipeList(Screen):
     def on_show_recipe_button_click(self, **kwargs):
+        global actionbutton
         super().__init__(**kwargs)
-        layout=BoxLayout(orientation="vertical")        
+        layout=BoxLayout(orientation="vertical")     #Makes layout to put buttons for recipes         
         self.add_widget(layout)
-        actionbar=ActionBar(size=(layout.width,dp(20)),pos_hint={'top':1})
-        actionbutton=ActionButton(text="Home",size_hint=(0.1,0.1),pos_hint={"right":1})
-        layout.add_widget(actionbar)
-        layout.add_widget(actionbutton)
+        actionbar=ActionBar(size_hint=(None,None),size=(layout.width,dp(100)),pos_hint={'top':1})       #I have a bar at the top of every screen that you can press and go to the home page
+        actionbutton=ActionButton(text="Home",size_hint=(0.1,0.1),pos_hint={"top":1})                   #However, when I rewrite the screen in the for loop it will delete the bar
+        self.add_widget(actionbar)                                                                      #I got it the bar and button back but the button has no functionality
+        self.add_widget(actionbutton)
         for i in range(0,10):
-            b=Button(text=str(recipe_labels[i]),size_hint=(1,.1))
+            b=Button(text=str(recipe_labels[i]),size_hint=(1,.1))       #Adds the 10 buttons 
             layout.add_widget(b)
+        if actionbutton.on_release:
+            self.current="first"                            #An attempt was made here but it doesn't work
+            self.manager.transition.direction="down"
         
         
 class WindowManager(ScreenManager):
@@ -168,3 +172,4 @@ class MyApp(App):
     def build(self):
         return kv
 MyApp().run()
+
