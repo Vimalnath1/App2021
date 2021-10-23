@@ -1,11 +1,11 @@
 WindowManager:
     MainWindow:
-    FoodTrackingWindow:
+    FoodTrackingWindow:             #Makes the classes screens
     RecipeWindow: 
     RecipeList:
 
 <MainWindow>:
-    name: "first"
+    name: "first"                   #Home Page
     GridLayout:
         rows:3
         Label:
@@ -15,7 +15,7 @@ WindowManager:
             Button:
                 text:"Food Tracker"
                 on_release:
-                    app.root.current="second"
+                    app.root.current="second"                   #Goes to food tracker window. Haven't designed that yet
                     root.manager.transition.direction="right"
                 pos_hint: {"center_x":0.3}
             Button:
@@ -27,14 +27,14 @@ WindowManager:
 
 <FoodTrackingWindow>:
     name: "second"
-    BoxLayout:
+    BoxLayout:                  #Work in Progress
         Label:
             text:"Food Tracker"
-    ActionBar:
+    ActionBar:                          #Explained on line 67
         size: root.width, 50
         pos_hint: {'top':1}
         ActionView:
-            ActionPrevious:
+            ActionPrevious:                 
                 with_previous:False
             ActionButton:
                 text:"Home"
@@ -49,12 +49,12 @@ WindowManager:
             text:"Recipes"
         BoxLayout:
             orientation:"horizontal"
-            Button:
+            Button:                         #Press this and you open up the food scanner. However for testing purposes i have a sample input so it wont open webcam
                 text:"Scan Food"
                 on_release:
                     app.root.current="fourth"
-                    root.on_button_click()
-                    root.manager.transition.direction="up"
+                    root.on_button_click()          #Calls function on line 144 of the python file
+                    root.manager.transition.direction="up"          #Thid and line 55 move the screen
                 pos_hint: {"right":1}
                 size_hint: 0.5,None
             Button:
@@ -64,24 +64,24 @@ WindowManager:
                     root.manager.transition.direction="up" 
                 pos_hint: {"left":1}
                 size_hint: 0.5,None
-    ActionBar:
+    ActionBar:                          #The action bar is the menu bar along the top of the screen
         size: root.width, 50
         pos_hint: {'top':1}
         ActionView:
             ActionPrevious:
-                with_previous:False
+                with_previous:False             #There is a useless button on the menu bar when you make one so this deletes it
             ActionButton:
                 text:"Home"
                 on_release:
-                    app.root.current="first"
+                    app.root.current="first"            #Moves the screen to home screen
                     root.manager.transition.direction="right"
 
 <RecipeList>:
     name:"fourth"
     Button:
-        text:"Show recipes"
+        text:"Show recipes"         #This is the screen which shows the recipes. If you press the button, it will show 10 different buttons for 10 recipes
         on_release:
-            root.on_show_recipe_button_click()
+            root.on_show_recipe_button_click()      #This is the function from lines 148-162 on python file
     ActionBar:
         size: root.width, 20
         pos_hint: {'top':1}
