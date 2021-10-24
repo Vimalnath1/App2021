@@ -83,7 +83,7 @@ WindowManager:
         on_release:
             root.on_show_recipe_button_click()      #This is the function from lines 148-162 on python file
     ActionBar:
-        size: root.width, 20
+        size: root.width, 50
         pos_hint: {'top':1}
         ActionView:
             ActionPrevious:
@@ -93,3 +93,4 @@ WindowManager:
                 on_release:
                     app.root.current="first"
                     root.manager.transition.direction="down"
+            
