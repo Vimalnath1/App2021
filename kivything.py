@@ -1,4 +1,5 @@
 import cv2
+from kivy.uix.behaviors import button
 from kivy.uix.label import Label
 from pyzbar.pyzbar import decode
 import numpy as np
@@ -19,9 +20,10 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.actionbar import ActionBar,ActionButton,ActionItem, ActionView
+from kivy.properties import StringProperty
 from kivy.lang import Builder
-import time
-from threading import *
+
+
 
 def recipeappfunction(): #main logic go to line 41 where it actually starts
     global recipe_labels
@@ -145,21 +147,20 @@ class RecipeWindow(Screen):
         recipeappfunction()
 
 class RecipeList(Screen):
+    buttonlist=[]
+
     def on_show_recipe_button_click(self, **kwargs):
-        global actionbutton
         super().__init__(**kwargs)
         layout=BoxLayout(orientation="vertical")     #Makes layout to put buttons for recipes         
         self.add_widget(layout)
-        actionbar=ActionBar(size_hint=(None,None),size=(layout.width,dp(100)),pos_hint={'top':1})       #I have a bar at the top of every screen that you can press and go to the home page
-        actionbutton=ActionButton(text="Home",size_hint=(0.1,0.1),pos_hint={"top":1})                   #However, when I rewrite the screen in the for loop it will delete the bar
-        self.add_widget(actionbar)                                                                      #I got it the bar and button back but the button has no functionality
-        self.add_widget(actionbutton)
+        actionbar=ActionBar(size_hint=(None,None),size=(layout.width,dp(100)),pos_hint={'top':1})       
+        layout.add_widget(actionbar)                                                                      
         for i in range(0,10):
             b=Button(text=str(recipe_labels[i]),size_hint=(1,.1))       #Adds the 10 buttons 
-            layout.add_widget(b)
-        if actionbutton.on_release:
-            self.current="first"                            #An attempt was made here but it doesn't work
-            self.manager.transition.direction="down"
+
+
+    
+            
         
         
 class WindowManager(ScreenManager):
